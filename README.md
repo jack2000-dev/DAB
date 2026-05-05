@@ -1,5 +1,7 @@
 # Data Analysis Bible (DAB)
 
+> **Status:** v0.0.1 — still under construction.
+
 A searchable wiki for data analysis. Built with [Zensical](https://zensical.org/), deployed to GitHub Pages.
 
 > Live site: <https://jack2000-dev.github.io/DAB/>
