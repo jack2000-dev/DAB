@@ -88,11 +88,13 @@ Purpose statement → Last update → Visual (with explanation) → Annotation �
 
 ## Checklist
 
+```markdown
 - [ ] Determine best way to share findings
 - [ ] Create effective visualizations
 - [ ] Present
 - [ ] Ensure work is accessible
 - [ ] Deliverable: supporting visualizations and key findings
+```
 
 ## References
 

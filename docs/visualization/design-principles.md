@@ -55,6 +55,7 @@
 
 ## Practical checklist before publishing
 
+```markdown
 - [ ] Title states the insight (not just the topic)
 - [ ] Axes labeled with units
 - [ ] Numbers formatted (commas, currency, %)
@@ -63,6 +64,7 @@
 - [ ] Source cited
 - [ ] Caption explains what to notice
 - [ ] Looks fine on a phone
+```
 
 ## References
 

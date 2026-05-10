@@ -1,0 +1,172 @@
+/* ── shared sx-explorer widget ── */
+.sx-explorer{
+  --sx-fill:  var(--md-accent-fg-color, #58a6ff);
+  --sx-edge:  var(--md-default-fg-color--lighter, rgba(127,127,127,.45));
+  --sx-text:  var(--md-default-fg-color, currentColor);
+  --sx-muted: var(--md-default-fg-color--light, rgba(127,127,127,.85));
+  --sx-cell:  var(--md-default-fg-color--lightest, rgba(127,127,127,.12));
+  border: 1px solid var(--sx-edge);
+  border-radius: 8px;
+  padding: 1rem 1rem 1.1rem;
+  margin: 1.25rem 0;
+  background: var(--md-default-bg-color, transparent);
+}
+.sx-explorer .sx-buttons{ display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1rem; }
+.sx-explorer .sx-btn{
+  font: inherit; font-size:.72rem; letter-spacing:.04em;
+  background:transparent; color: var(--sx-muted);
+  border:1px solid var(--sx-edge); border-radius:999px;
+  padding:.32em .8em; cursor:pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.sx-explorer .sx-btn:hover{ color:var(--sx-text); border-color:var(--sx-text); }
+.sx-explorer .sx-btn[aria-pressed="true"]{
+  background: var(--sx-fill);
+  color: var(--md-accent-bg-color, var(--md-default-bg-color, #fff));
+  border-color: transparent;
+}
+
+.sx-explorer .sx-stage{ margin: .3rem 0 1rem; }
+.sx-explorer .sx-stage-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-bottom:.4rem;
+}
+@media (max-width:540px){
+  .sx-explorer .sx-stage-grid{ grid-template-columns:1fr; }
+}
+.sx-explorer .sx-sublabel{
+  font-family: var(--md-code-font-family, ui-monospace, monospace);
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color: var(--sx-muted);
+  margin: .55rem 0 .25rem;
+}
+.sx-explorer .sx-table-wrap{ overflow-x:auto; }
+.sx-explorer table.sx-tbl{
+  border-collapse: collapse;
+  width: auto; max-width: 100%;
+  font-family: var(--md-code-font-family, ui-monospace, monospace);
+  font-size: .66rem;
+  line-height: 1.3;
+}
+.sx-explorer table.sx-tbl th,
+.sx-explorer table.sx-tbl td{
+  border: 1px solid var(--sx-edge);
+  padding: .18rem .45rem;
+  text-align: left;
+  color: var(--sx-text);
+  white-space: nowrap;
+}
+.sx-explorer table.sx-tbl th{
+  background: var(--sx-cell);
+  font-weight: 600; color: var(--sx-muted);
+  font-size: .56rem; letter-spacing:.06em; text-transform:uppercase;
+  padding: .14rem .45rem;
+}
+.sx-explorer table.sx-tbl tr.sx-match td{
+  background: color-mix(in srgb, var(--sx-fill) 16%, transparent);
+}
+.sx-explorer table.sx-tbl td.sx-hl,
+.sx-explorer table.sx-tbl th.sx-hl{
+  background: color-mix(in srgb, var(--sx-fill) 22%, transparent);
+}
+.sx-explorer .sx-arrow{
+  text-align:center; color: var(--sx-muted);
+  font-size: 1.2rem; line-height:1; margin: .25rem 0 .15rem;
+}
+.sx-explorer .sx-null{ color: var(--sx-muted); font-style: italic; }
+
+/* code stage (used by SQL optimization before/after) */
+.sx-explorer .sx-code{
+  margin: 0;
+  background: var(--md-code-bg-color, rgba(127,127,127,.12));
+  color: var(--md-code-fg-color, var(--sx-text));
+  padding: .55rem .7rem; border-radius: 6px;
+  font-family: var(--md-code-font-family, ui-monospace, monospace);
+  font-size: .72rem; line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre;
+}
+.sx-explorer .sx-code.sx-code-bad{
+  border-left: 3px solid #d85a30;
+}
+.sx-explorer .sx-code.sx-code-good{
+  border-left: 3px solid #1d9e75;
+}
+
+.sx-explorer .sx-meta{ margin-top: 1rem; }
+.sx-explorer .sx-name{
+  font-weight: 600; font-size: .95rem; color: var(--sx-text);
+  display:flex; align-items:center; gap:.55em; flex-wrap:wrap;
+}
+.sx-explorer .sx-level{
+  font-family: var(--md-code-font-family, ui-monospace, monospace);
+  font-size: .58rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: .25em .6em; border-radius: 999px;
+  border: 1px solid currentColor; line-height: 1;
+}
+.sx-explorer .sx-level[data-level="beginner"]    { color:#1d9e75; }
+.sx-explorer .sx-level[data-level="intermediate"]{ color:#c97f0a; }
+.sx-explorer .sx-level[data-level="advanced"]    { color:#d85a30; }
+.sx-explorer .sx-tag{
+  font-family: var(--md-code-font-family, ui-monospace, monospace);
+  font-size: .72rem; color: var(--sx-muted); margin-top: .15rem;
+}
+.sx-explorer .sx-desc{ margin-top:.55rem; font-size:.88rem; color: var(--sx-text); line-height:1.55; }
+.sx-explorer .sx-sql{
+  margin-top:.7rem;
+  background: var(--md-code-bg-color, rgba(127,127,127,.12));
+  color: var(--md-code-fg-color, var(--sx-text));
+  padding: .7rem .85rem; border-radius: 6px;
+  font-family: var(--md-code-font-family, ui-monospace, monospace);
+  font-size: .78rem; line-height: 1.5;
+  overflow-x: auto;
+}
+.sx-explorer .sx-sql code{ background:none; padding:0; font:inherit; color:inherit; }
+
+/* mermaid: constrain size + center */
+.mermaid{
+  max-width: 560px;
+  margin: 1.25rem auto;
+  text-align: center;
+}
+.mermaid svg{
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* ── chart picker (chart-selection page) ── */
+.sx-explorer .sx-chart-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: .6rem;
+}
+.sx-explorer .sx-chart-card{
+  border: 1px solid var(--sx-edge);
+  border-radius: 6px;
+  padding: .7rem .75rem .8rem;
+  background: var(--sx-cell);
+  display: flex; flex-direction: column; gap: .35rem;
+}
+.sx-explorer .sx-chart-card svg{
+  width: 100%; height: 50px;
+  display: block;
+}
+.sx-explorer .sx-chart-card .cc-name{
+  font-weight: 600; font-size: .78rem;
+  color: var(--sx-text);
+  letter-spacing: .01em;
+}
+.sx-explorer .sx-chart-card .cc-when{
+  font-size: .72rem; color: var(--sx-text); line-height: 1.4;
+}
+.sx-explorer .sx-chart-card .cc-not{
+  font-size: .68rem; color: var(--sx-muted);
+  font-style: italic;
+}
+.sx-explorer .sx-chart-card .cc-bar  { fill: var(--sx-fill); opacity: .75; }
+.sx-explorer .sx-chart-card .cc-line { fill: none; stroke: var(--sx-fill); stroke-width: 2; }
+.sx-explorer .sx-chart-card .cc-area { fill: var(--sx-fill); opacity: .35; }
+.sx-explorer .sx-chart-card .cc-axis { stroke: var(--sx-edge); stroke-width: 1; }
+.sx-explorer .sx-chart-card .cc-dot  { fill: var(--sx-fill); }
+.sx-explorer .sx-chart-card .cc-slice{ stroke: var(--md-default-bg-color, #fff); stroke-width: 1.5; }

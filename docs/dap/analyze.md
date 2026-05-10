@@ -176,6 +176,7 @@ Best practices:
 
 ## Checklist
 
+```markdown
 - [ ] Data aggregated, useful, accessible
 - [ ] Organized and formatted
 - [ ] Calculations performed
@@ -183,6 +184,7 @@ Best practices:
 - [ ] Findings peer-reviewed
 - [ ] Bias considered explicitly
 - [ ] Deliverable: summary of analysis
+```
 
 ## References
 

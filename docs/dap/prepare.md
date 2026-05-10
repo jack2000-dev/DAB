@@ -136,6 +136,7 @@ See [Resources → Datasets](../resources/datasets.md) for the full list.
 
 ## Checklist
 
+```markdown
 - [ ] Data sources identified and accessible
 - [ ] Data downloaded and stored appropriately
 - [ ] Schema understood (long/wide, columns, types)
@@ -143,6 +144,7 @@ See [Resources → Datasets](../resources/datasets.md) for the full list.
 - [ ] Credibility verified (ROCCC)
 - [ ] Privacy / licensing constraints documented
 - [ ] Deliverable: description of all data sources used
+```
 
 ## References
 

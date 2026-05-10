@@ -115,6 +115,198 @@ outliers = df[abs(z) > 3]
     df = df.rename(columns={'old':'new'})
     ```
 
+## Cleaning operations
+
+Click each operation to see the same dirty input transformed.
+
+<div class="sx-explorer" data-variant="dedup" markdown="0">
+  <div class="sx-buttons">
+    <button class="sx-btn" data-variant="dedup"        aria-pressed="true">dedup</button>
+    <button class="sx-btn" data-variant="trim_lower"   aria-pressed="false">trim + lower</button>
+    <button class="sx-btn" data-variant="fillna"       aria-pressed="false">fill NULL</button>
+    <button class="sx-btn" data-variant="drop_null"    aria-pressed="false">drop NULL</button>
+    <button class="sx-btn" data-variant="cast_type"    aria-pressed="false">cast type</button>
+    <button class="sx-btn" data-variant="parse_date"   aria-pressed="false">parse date</button>
+    <button class="sx-btn" data-variant="split_col"    aria-pressed="false">split column</button>
+    <button class="sx-btn" data-variant="regex_phone"  aria-pressed="false">regex strip</button>
+    <button class="sx-btn" data-variant="outlier_iqr"  aria-pressed="false">drop outliers</button>
+  </div>
+  <div class="sx-stage">
+    <div class="sx-sublabel">Before</div>
+    <div class="sx-table-wrap" data-stage="input"></div>
+    <div class="sx-arrow">↓</div>
+    <div class="sx-sublabel">After</div>
+    <div class="sx-table-wrap" data-stage="output"></div>
+  </div>
+  <div class="sx-meta">
+    <div class="sx-name"><span data-field="name"></span><span class="sx-level" data-field="level" data-level="beginner"></span></div>
+    <div class="sx-tag"  data-field="tag"></div>
+    <div class="sx-desc" data-field="desc"></div>
+    <pre class="sx-sql"><code data-field="sql"></code></pre>
+  </div>
+</div>
+<script>
+sxInit(document.currentScript, {
+  initial: 'dedup',
+  variants: {
+    dedup: { name:'Remove duplicates', level:'intermediate',
+      tag:'one row per natural key',
+      desc:'Use <code>ROW_NUMBER()</code> with a tie-breaker (latest <code>created_at</code>) to keep one canonical row per email.',
+      sql:'WITH ranked AS (\n  SELECT *,\n         ROW_NUMBER() OVER (\n           PARTITION BY email\n           ORDER BY created_at DESC\n         ) AS rn\n  FROM users\n)\nSELECT id, email, created_at\nFROM   ranked\nWHERE  rn = 1;',
+      stages:{
+        input: { cols:['id','email','created_at'], rows:[
+          [1,'alice@x.com','2025-01-01'],
+          [2,'bob@x.com',  '2025-02-15'],
+          [3,'alice@x.com','2025-03-10'],
+          [4,'bob@x.com',  '2024-12-20'],
+          [5,'cara@x.com', '2025-01-05']
+        ]},
+        output:{ cols:['id','email','created_at'], rows:[
+          [3,'alice@x.com','2025-03-10'],
+          [2,'bob@x.com',  '2025-02-15'],
+          [5,'cara@x.com', '2025-01-05']
+        ]}
+      }
+    },
+    trim_lower: { name:'Normalize strings', level:'beginner',
+      tag:'trim whitespace + casefold',
+      desc:'Strip surrounding whitespace and lower-case so equality matches behave. Do this once on insert when possible.',
+      sql:"UPDATE users\nSET    email = LOWER(TRIM(email));",
+      stages:{
+        input: { cols:['id','email'], rows:[
+          [1,'  Alice@Gmail.com  '],
+          [2,'BOB@yahoo.com'],
+          [3,'cara@x.com ']
+        ]},
+        output:{ cols:['id','email'], rows:[
+          [1,'alice@gmail.com'],
+          [2,'bob@yahoo.com'],
+          [3,'cara@x.com']
+        ]}
+      }
+    },
+    fillna: { name:'Fill NULL with default', level:'beginner',
+      tag:'COALESCE — first non-null wins',
+      desc:'Replace missing values with a sentinel so downstream code doesn\'t branch on <code>NULL</code>.',
+      sql:"SELECT id, name, COALESCE(country, 'unknown') AS country\nFROM   users;",
+      stages:{
+        input: { cols:['id','name','country'], rows:[
+          [1,'Alice','US'],
+          [2,'Bob',null],
+          [3,'Cara','UK'],
+          [4,'Dan',null]
+        ]},
+        output:{ cols:['id','name','country'], rows:[
+          [1,'Alice','US'],
+          [2,'Bob','unknown'],
+          [3,'Cara','UK'],
+          [4,'Dan','unknown']
+        ]}
+      }
+    },
+    drop_null: { name:'Drop rows with NULL', level:'beginner',
+      tag:'required field missing → discard',
+      desc:'When a column is required for analysis (e.g. <code>email</code>), drop rows that lack it rather than imputing.',
+      sql:'SELECT *\nFROM   users\nWHERE  email IS NOT NULL;',
+      stages:{
+        input: { cols:['id','name','email'], rows:[
+          [1,'Alice','alice@x.com'],
+          [2,'Bob',null],
+          [3,'Cara','cara@x.com'],
+          [4,'Dan',null]
+        ]},
+        output:{ cols:['id','name','email'], rows:[
+          [1,'Alice','alice@x.com'],
+          [3,'Cara','cara@x.com']
+        ]}
+      }
+    },
+    cast_type: { name:'Cast to numeric', level:'intermediate',
+      tag:'string-typed numbers · garbage → NULL',
+      desc:'Numbers stored as text break math. Cast safely — invalid values become <code>NULL</code> instead of erroring.',
+      sql:'SELECT id,\n       CAST(NULLIF(total, \'\') AS numeric) AS total\nFROM   orders;',
+      stages:{
+        input: { cols:['id','total'], rows:[
+          [101,'100'],
+          [102,'50.5'],
+          [103,'abc']
+        ]},
+        output:{ cols:['id','total'], rows:[
+          [101,100],
+          [102,50.5],
+          [103,null]
+        ]}
+      }
+    },
+    parse_date: { name:'Parse mixed-format dates', level:'intermediate',
+      tag:'normalize to a single timestamp type',
+      desc:'CSV exports often mix formats. Coerce everything to a real timestamp on ingest, with one canonical zone.',
+      sql:"SELECT id,\n       COALESCE(\n         TO_TIMESTAMP(created_at, 'YYYY-MM-DD\"T\"HH24:MI'),\n         TO_TIMESTAMP(created_at, 'YYYY-MM-DD'),\n         TO_TIMESTAMP(created_at, 'MM/DD/YYYY')\n       ) AS created_at\nFROM   users;",
+      stages:{
+        input: { cols:['id','created_at'], rows:[
+          [1,'2025-03-15'],
+          [2,'03/15/2025'],
+          [3,'2025-03-15T14:30']
+        ]},
+        output:{ cols:['id','created_at'], rows:[
+          [1,'2025-03-15 00:00:00'],
+          [2,'2025-03-15 00:00:00'],
+          [3,'2025-03-15 14:30:00']
+        ]}
+      }
+    },
+    split_col: { name:'Split one column into many', level:'intermediate',
+      tag:'one field, multiple atoms',
+      desc:'Split a composite field into atomic columns. Pick a delimiter strategy that handles the messy cases (missing parts, multiple spaces).',
+      sql:"SELECT id,\n       SPLIT_PART(full_name, ' ', 1)              AS first_name,\n       NULLIF(SPLIT_PART(full_name, ' ', 2), '') AS last_name\nFROM   users;",
+      stages:{
+        input: { cols:['id','full_name'], rows:[
+          [1,'Alice Smith'],
+          [2,'Bob Lee'],
+          [3,'Cara']
+        ]},
+        output:{ cols:['id','first_name','last_name'], rows:[
+          [1,'Alice','Smith'],
+          [2,'Bob','Lee'],
+          [3,'Cara',null]
+        ]}
+      }
+    },
+    regex_phone: { name:'Strip non-digits', level:'intermediate',
+      tag:'regex replace · canonical phone format',
+      desc:'Phone numbers arrive in dozens of formats. Strip every non-digit so equality and lookup work.',
+      sql:"UPDATE users\nSET    phone = REGEXP_REPLACE(phone, '\\D', '', 'g');",
+      stages:{
+        input: { cols:['id','phone'], rows:[
+          [1,'(555) 123-4567'],
+          [2,'555.987.6543'],
+          [3,'5551112222']
+        ]},
+        output:{ cols:['id','phone'], rows:[
+          [1,'5551234567'],
+          [2,'5559876543'],
+          [3,'5551112222']
+        ]}
+      }
+    },
+    outlier_iqr: { name:'Drop outliers (IQR)', level:'advanced',
+      tag:'1.5 × IQR rule',
+      desc:'Tukey\'s rule: keep rows inside <code>[Q1 − 1.5·IQR, Q3 + 1.5·IQR]</code>. Robust against extreme values that drag means around.',
+      sql:"WITH q AS (\n  SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY total) AS q1,\n         PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY total) AS q3\n  FROM   orders\n)\nSELECT o.*\nFROM   orders o, q\nWHERE  o.total BETWEEN q.q1 - 1.5*(q.q3-q.q1)\n                  AND q.q3 + 1.5*(q.q3-q.q1);",
+      stages:{
+        input: { cols:['id','total'], rows:[
+          [1,50],[2,80],[3,95],[4,110],[5,9999],[6,75]
+        ]},
+        output:{ cols:['id','total'], rows:[
+          [1,50],[2,80],[3,95],[4,110],[6,75]
+        ]}
+      }
+    }
+  }
+});
+</script>
+
+
 ## SQL cleaning patterns
 
 ### Remove duplicates
@@ -221,6 +413,7 @@ Schema.validate(df)
 
 ## Data-cleaning checklist
 
+```markdown
 - [ ] **Make a backup** before cleaning
 - [ ] **Determine size** — affects time/tools
 - [ ] **Categories/labels** — understand diversity
@@ -229,9 +422,11 @@ Schema.validate(df)
 - [ ] **Explore data types** — pick appropriate methods
 - [ ] Check spelling, misfielded values, duplicates
 - [ ] Document errors
+```
 
 ## Data verification checklist
 
+```markdown
 - [ ] Sources of errors identified with the right tools
 - [ ] Nulls scanned (filters, conditional formatting)
 - [ ] Misspellings located
@@ -244,6 +439,7 @@ Schema.validate(df)
 - [ ] Column names meaningful
 - [ ] Truncated data identified
 - [ ] Business logic sanity check
+```
 
 ## Workflow automation
 

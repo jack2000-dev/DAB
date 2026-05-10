@@ -69,7 +69,6 @@ nav = [
   { SQL = [
     { Overview = "sql/index.md" },
     { Fundamentals = "sql/fundamentals.md" },
-    { "Data Modeling" = "sql/data-modeling.md" },
     { Optimization = "sql/optimization.md" },
     { Snippets = "sql/snippets.md" },
   ]},
@@ -117,7 +116,7 @@ nav = [
 #
 # Read more: https://zensical.org/docs/customization/#additional-css
 #
-#extra_css = ["stylesheets/extra.css"]
+extra_css = ["assets/stylesheets/widgets.css"]
 
 # With the `extra_javascript` option you can add your own JavaScript to your
 # project to customize the behavior according to your needs.
@@ -125,7 +124,7 @@ nav = [
 # The path provided should be relative to the "docs_dir".
 #
 # Read more: https://zensical.org/docs/customization/#additional-javascript
-#extra_javascript = ["javascripts/extra.js"]
+extra_javascript = ["assets/javascripts/widgets.js"]
 
 # ----------------------------------------------------------------------------
 # Section for configuring theme options
@@ -372,8 +371,7 @@ toggle.name = "Switch to light mode"
 icon = "fontawesome/brands/github"
 link = "https://github.com/jack2000-dev/DAB"
 
-[project.extra]
-version = "v0.0.1"
+
 
 # ----------------------------------------------------------------------------
 # In this section you can configure the Markdown extensions that are used when

@@ -121,12 +121,14 @@ When stakeholders state a request, peel back to the root:
 
 ## Checklist
 
+```markdown
 - [ ] Identified the business task in one sentence
 - [ ] Confirmed key stakeholders and decision-maker
 - [ ] Agreed on success criteria
 - [ ] Documented constraints and assumptions
 - [ ] SOW signed off
 - [ ] Deliverable: clear statement of business task
+```
 
 ## References
 

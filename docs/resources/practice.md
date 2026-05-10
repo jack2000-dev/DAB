@@ -2,6 +2,7 @@
 
 ## Portfolio Evaluation Checklist
 
+```markdown
 - [ ] Anything missing? Steps in projects? Details in descriptions?
 - [ ] If you have a website, are all pages accounted for?
 - [ ] If hosted on a platform, are projects uploaded properly?
@@ -13,6 +14,7 @@
 - [ ] Anything seem extraneous or unprofessional?
 - [ ] Is portfolio hosted on the most appropriate platform?
 - [ ] Considered options: GitHub, Kaggle, Tableau Public, personal site
+```
 
 ## Case Study Structure
 

@@ -5,7 +5,6 @@ The lingua franca of data. Every analyst should be fluent.
 ## Pages
 
 - **[Fundamentals](fundamentals.md)** — `SELECT`, joins, aggregation, window functions
-- **[Data Modeling](data-modeling.md)** — Star schemas, Fact vs. Dimension tables, ETL vs ELT
 - **[Optimization](optimization.md)** — `EXPLAIN`, sargable queries, indexes, batching
 - **[Snippets](snippets.md)** — common patterns
 

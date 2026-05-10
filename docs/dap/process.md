@@ -80,11 +80,13 @@ Calculators:
 
 See **[Data Cleaning](data-cleaning.md)** for full techniques. Quick version:
 
+```markdown
 - [ ] **Determine size** — large datasets have more issues; affects time/tools
 - [ ] **Categories/labels** — diversity of dataset
 - [ ] **Missing data** — find nulls; plan remediation
 - [ ] **Unformatted data** — check formats
 - [ ] **Data types** — pick appropriate methods
+```
 
 ## Document the cleaning process
 
@@ -103,12 +105,14 @@ Keep a change log so you (and others) can reproduce results later.
 
 ## Checklist
 
+```markdown
 - [ ] Backup made
 - [ ] Errors identified and documented
 - [ ] Tools chosen
 - [ ] Data transformed for analysis
 - [ ] Cleaning log written
 - [ ] Deliverable: documentation of any cleaning or manipulation
+```
 
 ## References
 

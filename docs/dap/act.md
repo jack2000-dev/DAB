@@ -37,10 +37,12 @@ When acting on a finding, ask "why" five times to surface the root cause:
 
 ## Checklist
 
+```markdown
 - [ ] Create your portfolio
 - [ ] Add your case study
 - [ ] Practice presenting to a friend or family member
 - [ ] Deliverable: top high-level insights based on analysis
+```
 
 ## Guiding questions
 
