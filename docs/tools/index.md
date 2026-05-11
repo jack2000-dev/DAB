@@ -1,6 +1,6 @@
 # Tools
 
-The full toolbox.
+- [Firecrawl](https://www.firecrawl.dev/) - a web scraper for AI-powered data extraction
 
 ## Pages
 

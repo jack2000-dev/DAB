@@ -10,6 +10,7 @@
 - [World Bank Open Data](https://data.worldbank.org/)
 - [WHO data](https://www.who.int/data/collections)
 
+
 ## Cloud platforms (free public sets)
 
 - [Google Cloud Public Datasets](https://cloud.google.com/datasets)
@@ -42,6 +43,9 @@
 - [Dune](https://dune.com/) — SQL on blockchain
 - [The Graph](https://thegraph.com/)
 - [Allium](https://allium.so/)
+- [CoinGecko](https://www.coingecko.com/en/api)
+- [CoinMarketCap](https://coinmarketcap.com/api/documentation/v1/)
+- [CoinCap](https://pro.coincap.io/api-docs)
 
 ### Geographic
 

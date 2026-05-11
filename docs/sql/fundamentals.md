@@ -56,6 +56,175 @@ This is an **ER (entity-relationship) diagram** in Mermaid syntax. Conventions:
 You'll see this schema referenced throughout the rest of the page.
 
 
+## Order of operations
+
+SQL has **two** orders — the order you **write** a query and the order the engine **executes** it. Mixing them up is the #1 source of "column not found" and "can't use alias" errors.
+
+### Execution pipeline
+
+This is how the database actually processes your query, step by step:
+
+```mermaid
+flowchart LR
+  A["1 · FROM / JOIN"] --> B["2 · WHERE"]
+  B --> C["3 · GROUP BY"]
+  C --> D["4 · HAVING"]
+  D --> E["5 · SELECT"]
+  E --> F["6 · DISTINCT"]
+  F --> G["7 · ORDER BY"]
+  G --> H["8 · LIMIT / OFFSET"]
+```
+
+### Writing vs execution
+
+Click a clause to see **when you write it** vs **when SQL runs it** — and the practical gotcha that comes from the gap.
+
+<div class="sx-explorer" data-variant="overview" markdown="0">
+  <div class="sx-buttons">
+    <button class="sx-btn" data-variant="overview"  aria-pressed="true">Overview</button>
+    <button class="sx-btn" data-variant="from"      aria-pressed="false">FROM</button>
+    <button class="sx-btn" data-variant="where"     aria-pressed="false">WHERE</button>
+    <button class="sx-btn" data-variant="group_by"  aria-pressed="false">GROUP BY</button>
+    <button class="sx-btn" data-variant="having"    aria-pressed="false">HAVING</button>
+    <button class="sx-btn" data-variant="select"    aria-pressed="false">SELECT</button>
+    <button class="sx-btn" data-variant="distinct"  aria-pressed="false">DISTINCT</button>
+    <button class="sx-btn" data-variant="order_by"  aria-pressed="false">ORDER BY</button>
+    <button class="sx-btn" data-variant="limit"     aria-pressed="false">LIMIT</button>
+  </div>
+  <div class="sx-stage">
+    <div class="sx-stage-grid">
+      <div>
+        <div class="sx-sublabel">✏️ Writing order</div>
+        <div class="sx-table-wrap" data-stage="write"></div>
+      </div>
+      <div>
+        <div class="sx-sublabel">⚙️ Execution order</div>
+        <div class="sx-table-wrap" data-stage="exec"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sx-meta">
+    <div class="sx-name"><span data-field="name"></span><span class="sx-level" data-field="level" data-level="beginner"></span></div>
+    <div class="sx-tag"  data-field="tag"></div>
+    <div class="sx-desc" data-field="desc"></div>
+    <pre class="sx-sql"><code data-field="sql"></code></pre>
+  </div>
+</div>
+<script>
+sxInit(document.currentScript, {
+  initial: 'overview',
+  stages: {
+    write: { cols:['#','Clause'], rows:[
+      ['1','SELECT'],['2','FROM / JOIN'],['3','WHERE'],
+      ['4','GROUP BY'],['5','HAVING'],['6','ORDER BY'],['7','LIMIT / OFFSET']
+    ]},
+    exec: { cols:['#','Clause'], rows:[
+      ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY'],
+      ['4','HAVING'],['5','SELECT'],['6','DISTINCT'],
+      ['7','ORDER BY'],['8','LIMIT / OFFSET']
+    ]}
+  },
+  variants: {
+    overview: { name:'Overview', level:'beginner',
+      tag:'writing ≠ execution',
+      desc:'You <em>write</em> SELECT first, but the engine <em>runs</em> FROM first. This is why you can\'t use a SELECT alias in WHERE — WHERE runs before SELECT even exists.',
+      sql:'-- You write it like this:\nSELECT   col, AGG(col)   -- 1st written, 5th executed\nFROM     table            -- 2nd written, 1st executed\nWHERE    condition        -- 3rd written, 2nd executed\nGROUP BY col              -- 4th written, 3rd executed\nHAVING   AGG(col) > n     -- 5th written, 4th executed\nORDER BY col              -- 6th written, 7th executed\nLIMIT    n;               -- 7th written, 8th executed' },
+
+    from: { name:'FROM / JOIN', level:'beginner',
+      tag:'write 2nd · execute 1st',
+      desc:'The engine starts here — it figures out which tables to read and how to join them. This builds the full working row set that every later clause filters or transforms.',
+      sql:'SELECT u.name, SUM(o.total) AS revenue\nFROM   users u                          -- ← starts here\nJOIN   orders o ON o.user_id = u.id\nWHERE  u.country = \'US\'\nGROUP BY u.name;',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN  ← runs 1st'],['2','WHERE'],['3','GROUP BY'],
+        ['4','HAVING'],['5','SELECT'],['6','DISTINCT'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[0] } },
+
+    where: { name:'WHERE', level:'beginner',
+      tag:'write 3rd · execute 2nd',
+      desc:'Filters individual rows <em>before</em> grouping. Because SELECT hasn\'t run yet, <strong>you can\'t reference aliases</strong> defined in SELECT. Use the original column name or expression instead.',
+      sql:'-- ✗ This fails — "revenue" doesn\'t exist yet\nSELECT SUM(total) AS revenue\nFROM   orders\nWHERE  revenue > 500;   -- ERROR!\n\n-- ✓ Use the raw expression\nSELECT SUM(total) AS revenue\nFROM   orders\nGROUP BY user_id\nHAVING SUM(total) > 500;',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE  ← runs 2nd'],['3','GROUP BY'],
+        ['4','HAVING'],['5','SELECT'],['6','DISTINCT'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[1] } },
+
+    group_by: { name:'GROUP BY', level:'beginner',
+      tag:'write 4th · execute 3rd',
+      desc:'Collapses the filtered rows into groups. After this step, each row represents a group — you can only SELECT columns that are in GROUP BY or inside an aggregate function.',
+      sql:'SELECT   country, COUNT(*) AS orders\nFROM     orders o\nJOIN     users u ON u.id = o.user_id\nWHERE    o.status = \'paid\'\nGROUP BY country;         -- ← collapses rows here',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY  ← runs 3rd'],
+        ['4','HAVING'],['5','SELECT'],['6','DISTINCT'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[2] } },
+
+    having: { name:'HAVING', level:'intermediate',
+      tag:'write 5th · execute 4th',
+      desc:'Filters <em>groups</em> (not rows). Runs after GROUP BY, so you <strong>can</strong> use aggregate functions here. Think of it as WHERE but for groups.',
+      sql:'SELECT   country, SUM(total) AS revenue\nFROM     orders o\nJOIN     users u ON u.id = o.user_id\nGROUP BY country\nHAVING   SUM(total) > 10000;  -- ← filter groups',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY'],
+        ['4','HAVING  ← runs 4th'],['5','SELECT'],['6','DISTINCT'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[3] } },
+
+    select: { name:'SELECT', level:'beginner',
+      tag:'write 1st · execute 5th',
+      desc:'The biggest surprise: you write it first but it runs 5th. This is when aliases are born — which is why earlier clauses can\'t see them but ORDER BY (which runs later) can.',
+      sql:'SELECT   country,\n         SUM(total) AS revenue   -- alias created here\nFROM     orders o\nJOIN     users u ON u.id = o.user_id\nGROUP BY country\nORDER BY revenue DESC;           -- OK — ORDER BY runs after SELECT',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY'],
+        ['4','HAVING'],['5','SELECT  ← runs 5th (aliases born)'],['6','DISTINCT'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[4] } },
+
+    distinct: { name:'DISTINCT', level:'beginner',
+      tag:'execute 6th (part of SELECT)',
+      desc:'Removes duplicate rows from the result set. Runs right after SELECT, before ORDER BY. Not a clause you write separately — it\'s a modifier on SELECT.',
+      sql:'SELECT DISTINCT country\nFROM   users;',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY'],
+        ['4','HAVING'],['5','SELECT'],['6','DISTINCT  ← deduplicates here'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[5] } },
+
+    order_by: { name:'ORDER BY', level:'beginner',
+      tag:'write 6th · execute 7th',
+      desc:'Sorts the final result. Runs <em>after</em> SELECT, so you <strong>can</strong> reference column aliases here. This is the only clause where alias references are guaranteed safe.',
+      sql:'SELECT   country, SUM(total) AS revenue\nFROM     orders o\nJOIN     users u ON u.id = o.user_id\nGROUP BY country\nORDER BY revenue DESC;   -- ← alias "revenue" works here',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY'],
+        ['4','HAVING'],['5','SELECT'],['6','DISTINCT'],
+        ['7','ORDER BY  ← runs 7th (aliases visible)'],['8','LIMIT / OFFSET']
+      ]}},
+      matches:{ exec:[6] } },
+
+    limit: { name:'LIMIT / OFFSET', level:'beginner',
+      tag:'write 7th · execute 8th (dead last)',
+      desc:'Chops the sorted result to N rows. Always runs last — that\'s why <code>LIMIT</code> without <code>ORDER BY</code> gives non-deterministic results.',
+      sql:'SELECT   country, SUM(total) AS revenue\nFROM     orders o\nJOIN     users u ON u.id = o.user_id\nGROUP BY country\nORDER BY revenue DESC\nLIMIT    5;              -- ← top 5 only',
+      stages:{ exec:{ cols:['#','Clause'], rows:[
+        ['1','FROM / JOIN'],['2','WHERE'],['3','GROUP BY'],
+        ['4','HAVING'],['5','SELECT'],['6','DISTINCT'],
+        ['7','ORDER BY'],['8','LIMIT / OFFSET  ← runs 8th (last)']
+      ]}},
+      matches:{ exec:[7] } }
+  }
+});
+</script>
+
+!!! tip "Mnemonic — **F**unny **W**izards **G**rill **H**ot **S**ausages **D**uring **O**pen **L**unch"
+    **F**ROM → **W**HERE → **G**ROUP BY → **H**AVING → **S**ELECT → **D**ISTINCT → **O**RDER BY → **L**IMIT
+
+
 ## JOIN
 
 JOINs let you combine rows from two tables on a related column. In our schema, the canonical example is `users` ⋈ `orders` ON `users.id = orders.user_id`.

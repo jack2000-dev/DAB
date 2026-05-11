@@ -17,13 +17,17 @@ A searchable wiki for data analysis. DAP (Data Analysis Process), Python, SQL, v
 - :material-book-open: **[Resources](resources/index.md)** — cheatsheets, books, tutorials, datasets, practice guide.
 - :material-book-alphabet: **[Glossary](glossary.md)** — full term glossary, searchable.
 
-## Use this site
+## Quick Stats Guide
 
-- **Search** anything in the top bar (e.g. "SMART questions", "EXPLAIN ANALYZE", "IQR").
-- Each section has an **Overview** page, then specific topics.
-- Code blocks have **copy buttons**.
-- Pages end with **References** linking authoritative sources.
+### **1. Correlation (*r*)**
+* **Near 0:** No relationship.
+* **0.3 - 0.5:** Moderate relationship.
+* **0.7 - 1.0:** Very strong relationship.
+* *Note: (+) means same direction, (-) means opposite.*
 
-## Source
+### **2. Significance (*p*)**
+* **p < 0.05:** **Significant.** The result is likely real.
+* **p > 0.05:** **Not Significant.** The result might be a fluke.
 
-Long-form notes maintained at [github.com/jack2000-dev/DAB](https://github.com/jack2000-dev/DAB), distilled and cross-referenced with primary sources (pandas, PostgreSQL, From Data to Viz, etc.).
+### **Conclusion**
+Only trust the correlation (*r*) if the probability (*p*) is low.

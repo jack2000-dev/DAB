@@ -79,6 +79,11 @@ nav = [
     { "Dashboard Architecture" = "visualization/dashboards.md" },
     { Tools = "visualization/tools.md" },
   ]},
+  { "Analytics Engineering" = [
+    { Overview = "analytics-engineering/index.md" },
+    { "Version Control" = "analytics-engineering/vcs.md" },
+    { "ADLC" = "analytics-engineering/ADLC.md" },
+  ]},
   { "AI for DA" = [
     { Overview = "ai-for-da/index.md" },
     { Tools = "ai-for-da/tools.md" },

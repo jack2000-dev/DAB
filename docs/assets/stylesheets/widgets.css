@@ -10,6 +10,10 @@
   padding: 1rem 1rem 1.1rem;
   margin: 1.25rem 0;
   background: var(--md-default-bg-color, transparent);
+  /* allow widget to shrink inside flex/grid layouts (sidebar + content) */
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 .sx-explorer .sx-buttons{ display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1rem; }
 .sx-explorer .sx-btn{
