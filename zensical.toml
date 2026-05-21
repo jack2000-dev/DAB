@@ -110,9 +110,8 @@ nav = [
     { "Python Cheatsheet" = "resources/python-cheatsheet.md" },
     { "SQL Cheatsheet" = "resources/sql-cheatsheet.md" },
     { Books = "resources/books.md" },
-    { Tutorials = "resources/tutorials.md" },
+    { "Tutorials & Practice" = "resources/tutorials.md" },
     { Datasets = "resources/datasets.md" },
-    { "Practice Guide" = "resources/practice.md" },
   ]},
   { Glossary = "glossary.md" },
 ]

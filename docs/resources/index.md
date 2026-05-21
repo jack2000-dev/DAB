@@ -5,9 +5,8 @@
 - **[Python Cheatsheet](python-cheatsheet.md)** — most-used pandas functions
 - **[SQL Cheatsheet](sql-cheatsheet.md)** — most-used functions and clauses
 - **[Books](books.md)** — DAMA-DMBOK, Tukey, McKinney, Wickham
-- **[Tutorials](tutorials.md)** — Coursera, Kaggle, Made with ML, StatQuest
+- **[Tutorials & Practice](tutorials.md)** — courses, learning paths, practice platforms, portfolio & interview prep
 - **[Datasets](datasets.md)** — open data sources for practice
-- **[Practice Guide](practice.md)** — portfolio checklist, case study, interview prep
 
 ## Courses & certifications
 
