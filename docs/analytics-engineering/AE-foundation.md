@@ -24,7 +24,7 @@ It's bridge the gap between Data Engineer and Data Analyst
 
 ## SQL for Analytics
 
-See also: [[sql/index]]
+See also: [SQL](../sql/index.md)
 
 ### CTEs (Common Table Expressions)
 

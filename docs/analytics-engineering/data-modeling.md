@@ -362,7 +362,7 @@ JOIN dim_products p ON f.product_id = p.product_id
 JOIN dim_date d ON f.date_id = d.date_id
 GROUP BY p.product_name, p.category, d.date;
 ```
-See also: [[PostgreSQL]]
+See also: [PostgreSQL documentation](https://www.postgresql.org/docs/)
 
 ### Best Practices
 

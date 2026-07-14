@@ -20,3 +20,5 @@ Thumbs.db
 ref/
 .cache
 .obsidian/
+# Riptide artifacts (cloud-synced)
+.humanlayer/tasks/

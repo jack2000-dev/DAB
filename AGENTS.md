@@ -126,4 +126,4 @@ When ref material is thin, fill from these (already used throughout):
 
 ## Skills
 
-The `wiki-maintainer` skill at `.Codex/skills/wiki-maintainer/SKILL.md` codifies this workflow. Invoke it when adding, editing, or refactoring docs.
+The `wiki-maintainer` skill at `.agents/skills/wiki-maintainer/SKILL.md` codifies this workflow. Invoke it when adding, editing, or refactoring docs.
