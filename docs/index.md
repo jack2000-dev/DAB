@@ -1,4 +1,4 @@
-# Data Analysis Bible
+# The Data Bible
 
 A searchable wiki for data analysis. DAP (Data Analysis Process), Python, SQL, visualization, AI tooling, soft skills.
 

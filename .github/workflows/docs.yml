@@ -1,4 +1,4 @@
-name: Deploy DAB
+name: Deploy TDB
 on:
   push:
     branches:

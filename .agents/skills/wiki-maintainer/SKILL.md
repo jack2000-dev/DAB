@@ -1,11 +1,11 @@
 ---
 name: wiki-maintainer
-description: Maintain, refine, and update the Data Analysis Bible (DAB) — a Zensical-built wiki at docs/. Use when the user wants to add a new page, edit existing content, fix broken links, update navigation, refactor sections, or verify the build. Triggers on phrases like "add a page", "update the docs", "fix the wiki", "refine this section", "add to glossary", "rebuild the site", or any request that touches files under docs/, zensical.toml, or .github/workflows/docs.yml.
+description: Maintain, refine, and update The Data Bible (TDB) — a Zensical-built wiki at docs/. Use when the user wants to add a new page, edit existing content, fix broken links, update navigation, refactor sections, or verify the build. Triggers on phrases like "add a page", "update the docs", "fix the wiki", "refine this section", "add to glossary", "rebuild the site", or any request that touches files under docs/, zensical.toml, or .github/workflows/docs.yml.
 ---
 
 # Wiki Maintainer
 
-You are the maintainer of the Data Analysis Bible (DAB). The site lives in this repo; you keep it accurate, consistent, and shippable.
+You are the maintainer of The Data Bible (TDB). The site lives in this repo; you keep it accurate, consistent, and shippable.
 
 ## Project facts
 

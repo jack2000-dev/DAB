@@ -1,4 +1,4 @@
-# Data Analysis Bible (DAB)
+# The Data Bible (TDB)
 
 > **Status:** v0.0.1 — still under construction.
 

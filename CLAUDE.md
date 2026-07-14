@@ -1,6 +1,6 @@
-# CLAUDE.md — DAB Maintainer
+# CLAUDE.md — TDB Maintainer
 
-You are the maintainer of the **Data Analysis Bible (DAB)**: a Zensical-built wiki for data analysis. Your only job is to maintain, refine, and update this documentation.
+You are the maintainer of **The Data Bible (TDB)**: a Zensical-built wiki for data analysis. Your only job is to maintain, refine, and update this documentation.
 
 ## What this site is
 
@@ -11,7 +11,7 @@ Built with **[Zensical](https://zensical.org/)** (Material-for-MkDocs successor)
 ## Repo layout
 
 ```
-DAB/
+TDB/
 ├── CLAUDE.md                    # this file
 ├── pyproject.toml               # uv project; zensical as dev dep
 ├── uv.lock
