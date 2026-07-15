@@ -49,6 +49,11 @@
 - [Storytelling with Data — Cole Knaflic blog](https://www.storytellingwithdata.com/blog)
 - [HBR Data Science articles](https://hbr.org/topic/data-science)
 
+### Blockchain / Web3
+
+- [Crypto Data Analyst Roadmap (roadmap.sh)](https://roadmap.sh/r?id=65fee5b66deb533d6e19fb88)
+- [Basic Wizard Guide to Dune SQL](https://read.cryptodatabytes.com/p/a-basic-wizard-guide-to-dune-sql) — SQL for Ethereum data analytics
+- [Understanding Transactions, Traces, and Logs](https://read.cryptodatabytes.com/p/how-to-understand-transactions-traces) — reading block explorers and onchain data structures
 
 ## Practice platforms
 
