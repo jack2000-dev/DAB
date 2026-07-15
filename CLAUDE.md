@@ -164,7 +164,7 @@ The user often pastes raw unformatted text (from notes, ChatGPT, or copy-paste f
 - Don't edit content when the user says "DO NOT EDIT THE CONTENT" — only fix structure (headings, indentation, nesting).
 - Don't create multiple `#` (H1) headings on a single page — this breaks the TOC.
 - Don't recreate per-role glossary pages. The glossary is unified at `docs/glossary.md` under Resources.
-- Don't touch `site_url`, `repo_url`, `repo_name`, or the `dab` package name — TDB is a display name; the repo stays `DAB`.
+- Don't touch `site_url`, `repo_url`, or `repo_name` — TDB is a display name; the repo and its published URL stay `DAB`. (`pyproject.toml`'s `name` is deliberately `TDB` — it's a virtual package, nothing publishes or imports it. Leave it.)
 - Don't move the DA folders into a `docs/da/` directory — they're re-nested by `nav` only, and moving them breaks every published URL.
 - Don't author new prose for role content. Port the owner's own bible notes and lay out structure; leave a `<!-- TODO -->` where notes are missing.
 
