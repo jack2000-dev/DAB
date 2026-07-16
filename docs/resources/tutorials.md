@@ -16,6 +16,7 @@
 - [Fundamentals of Database Administration](https://www.youtube.com/watch?v=NuwDF6kzONs&list=PLDYqU5RH_aX1hdZ32WfXklJlkh-H74juv) - By Brent Ozar
 - [SmartPostgres](https://www.youtube.com/@SmartPostgres) - By Brent Ozar but focus on PostgreSQL
 - [Decomplexify](https://www.youtube.com/@decomplexify) - Explain complex simply
+- [Ben Dicken](https://www.youtube.com/@benjdicken) - Databases, distributed systems, software engineering
 
 ### Data Engineering
 
