@@ -85,7 +85,7 @@ nav = [
       { Share = "dap/share.md" },
       { Act = "dap/act.md" },
     ]},
-    { Python = [
+    { "Python for DA" = [
       { Overview = "python/index.md" },
       { EDA = "python/eda.md" },
       { Libraries = "python/libraries.md" },
@@ -442,3 +442,6 @@ combine_header_slug = true
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
 [project.markdown_extensions.pymdownx.tilde]
+
+# Image extensions
+[project.markdown_extensions.pymdownx.blocks.caption]

@@ -55,7 +55,7 @@ sns.heatmap(df.select_dtypes('number').corr(), annot=True)
 sns.pairplot(df.sample(min(500, len(df))))
 ```
 
-See [Python → EDA](../python/eda.md) for the full pattern.
+See [Python → EDA](../python-for-da/eda.md) for the full pattern.
 
 ## Data validation
 
@@ -116,7 +116,7 @@ df.groupby('country').agg(
 | **Top N per group** | Best customers per region, etc. |
 | **Year-over-year / period-over-period** | Growth rates |
 
-Snippets in [SQL → Snippets](../sql/snippets.md) and [Python → Snippets](../python/snippets.md).
+Snippets in [SQL → Snippets](../sql/snippets.md) and [Python → Snippets](../python-for-da/snippets.md).
 
 ## Temporary Tables (SQL)
 

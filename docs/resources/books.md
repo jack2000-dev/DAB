@@ -38,22 +38,9 @@
 - **[Pattern Recognition and Machine Learning (Bishop)](https://www.microsoft.com/en-us/research/people/cmbishop/)**
 - **[Probabilistic Machine Learning (Murphy)](https://probml.github.io/pml-book/book1.html)** — free.
 
-## Communication & soft skills
+# Articles
 
-- **[How to Win Friends and Influence People (Carnegie)](https://www.amazon.com/How-Win-Friends-Influence-People/dp/0671027034)**
-- **[Made to Stick (Heath brothers)](https://heathbrothers.com/books/made-to-stick/)**
-
-## R-specific
-
-- **[R for Data Science (Wickham & Grolemund)](https://r4ds.hadley.nz/)** — free.
-- **[Tidy Data (Wickham, paper)](https://vita.had.co.nz/papers/tidy-data.pdf)**
-
-## Reading order suggestion
-
-For a brand-new analyst:
-
-1. Storytelling with Data (Knaflic)
-2. Python for Data Analysis (McKinney)
-3. OpenIntro Statistics
-4. Lean Analytics (or domain-specific equivalent)
-5. Designing Data-Intensive Applications (when you need scale)
+- [Database Star](https://www.databasestar.com/) - by Ben Brumm
+- [Roadmap.sh](https://roadmap.sh/dashboard) - Plan your career path
+- [Snowflake Blog](https://medium.com/snowflake)
+- [DSA](https://roadmap.sh/datastructures-and-algorithms) - Data Structure & Algorithm

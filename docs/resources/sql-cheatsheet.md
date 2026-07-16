@@ -1,5 +1,9 @@
 # SQL Cheatsheet
 
+## Sources
+- [SQL Cheat Sheets](https://learnsql.com/tags/cheat-sheet/)
+- [SQL Cookboook](https://learnsql.com/cookbook/)
+
 ## Frequently used functions (cleaning + transformation)
 
 | Function | Use |

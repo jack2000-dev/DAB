@@ -1,5 +1,120 @@
 # Fundamentals
 
+## How to Think Like the Engine
+
+### Clustered Index and WHERE Clause
+
+![ClusteredIndex](/assets/images/ClusteredIndex_8KB_page.png){center}
+
+- **Clustered Index -> Id table (PK, int, not null):** stored 8KB pages (8,192 bytes) in a B-tree structure, which is efficient for range queries and lookups.
+- The more you store cluster index the more it will cause performace problem later on, so you should only store cluster index on the column that you will use to filter the data most of the time.
+- A page is the smallest unit of data that SQL Server work with.
+
+- **If we need to read a row:**
+    - Figure out which page has it
+    - Get that page up in memory (buffer pool)
+- **To write a row:**
+    - Get that page up in memory
+    - Make our changes
+    - Write the page to disk (write-ahead log)
+
+- Measuring on query performance: Focus on `logical reads` if it read less source data, it's gonna run faster.
+
+#### The Ideal SQL Server vs. The Real SQL Server
+
+| Ideal SQL Server | Real SQL Server |
+| ---------------- | ---------------- |
+| Query is easy to understand | Query is not easy to understand |
+| The data you want is only on one page | The data you want is spread across many pages |
+| SQL Server knows exactly where to find the data | SQL Server doesn't know exactly which page |
+| SQL Server has that page cached, and can jump to exactly that page | SQL Server doesn't have that page cached, and has to read it from disk |
+| SQL Server can read the data out as-is, without doing an additional manipulation | SQL Server has to do a bunch of work on the data like sum, group, join, and order by |
+
+### ORDER BY and Caching
+
+- ORDER BY will sort data and could eat more CPU resource
+- If your query is not using `SELECT TOP 100 FROM dbo.Users` then you probably don't need to sort the data (using ORDER BY). Note that this is a performance practices.
+- SQL Server DOES NOT cache the `ORDER BY`. It will eat your CPU ($) every time that it runs. (On the other hand, Oracle has "result cache" feature that you can turn it on to cache)
+
+### Non-clustered Indexes, Seeks vs Scans
+
+![ClusteredIndex](/assets/images/Non-ClusteredIndex.png){center}
+
+- Stored in order we want, include the fields we want
+- Literally a copy of the table
+- **Clustered index = all of the columns (Has all rows, all columns)**
+- **Nonclustered index = you pick which columns (Has all rows, but not all columns)**
+- `DELETE` and `INSERT` now have to do twice the write (clustered + nonclustered) to keep them in sync
+- `UPDATE` only affect copies that have the column being updated
+- In theory, don't index hot columns (the columns that change all the time)
+- In thoery, less indexes are good (generally, **5 indexes or less, with 5 columns or less on each indexes**)
+
+**How to create Non-clustered Index:**
+
+```sql
+CREATE INDEX
+IX_LastAccessDate_Id
+ON dbo.Users (LastAccessDate, Id)
+```
+Note: SQL Server will include `Id` by default
+
+#### Seeks vs Scans
+
+- Index Seek (NonClustered)
+- Index Scan (Clustered)
+- Seek: help you read less data and eat less CPU work
+- But seek could mean you reading the whole table. It depends on the query and the index. If you have a query that is not selective enough, it will read the whole table and do a scan instead of a seek.
+- `TOP` is not sort `ORDER BY`. It's more like head of the table.
+
+### Key Lookups, the Tipping Point, and Cost-Based Optimization
+
+- It's not a good idea to use "index hints" (Let the engine decide which index to use)
+- Pick the right tool for the right job. Key look up is one of the tool.
+
+This is one of the tool that available (but it barely use)
+
+```sql
+DBCC SHOW_STATISTICS ('dbo.Users', 'IX_LastAccessDate_Id')
+```
+### Bad Quries and Wider Indexes
+
+- To check low performance queries: Read the excution plan from right to left, top to bottom. Look for the first place where estimated vs actual rows is off by a lot.
+- Wider indexes is basically add more columns to the index. It will make the index bigger and slower to read, but it will make the query faster because it will reduce the number of key lookups.
+- Wider indexes rules of thumb: Just get the right columns on the page and make sure the first column is something you searching for. (first column is important in filtering)
+
+
+**New DBA:**
+
+```sql
+CREATE INDEX IX_LastAccessDate_Id_DisplayName_Location
+ON dbo.Users (LastAccessDate, Id, DisplayName, Location);
+```
+
+**Old DBA:**
+
+```sql
+CREATE INDEX IX_LastAccessDate_Id_Include
+ON dbo.Users (LastAccessDate, Id)
+INCLUDE (DisplayName, Location);
+```
+
+### Conclusion
+
+- Indexes: literally a copy of parts of the table
+    - Good: indexes reduce page reads, CPU for srts
+    - Bad: indexes slow down D/U/I work
+- Seek means jump to one area and start reading
+- Scan means start at either end of the index
+- Neither seek nor scan refers to how much we'll read
+
+### Big data version
+
+How to think like the engine but for big data.
+
+- You should index the joint. Which are the columns that frequently `JOIN` like `Id` and PrimaryKey column
+- It's important to do "Pagination" 
+
+
 ## Database Indexes
 
 Indexes are database objects that enhance the speed of data retrieval operations. They function by creating a quick lookup mechanism for data based on one or more columns in a table, much like an index in a book helps you find information quickly. Namely, indexes reduce the amount of disk I/O needed to access data, thereby boosting overall database performance.

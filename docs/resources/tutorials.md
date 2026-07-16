@@ -6,8 +6,6 @@
 - [StatQuest YouTube](https://www.youtube.com/@statquest) — best stats explanations on the internet
 - [3Blue1Brown](https://www.3blue1brown.com/) — visual math (linear algebra, probability)
 - [Seeing Theory](https://seeing-theory.brown.edu/) — interactive probability/stats
-- [Khan Academy — Statistics](https://www.khanacademy.org/math/statistics-probability)
-- [Mode SQL Tutorial](https://mode.com/sql-tutorial/) — practical SQL with business cases
 - [SQLZoo](https://sqlzoo.net/) — SQL exercises
 - [Computerphile](https://www.youtube.com/@Computerphile) — computing concepts explained
 
@@ -23,11 +21,14 @@
 
 ## Topical learning
 
+### Data Engineering
+
+- [Data Engineer Bootcamp FREE 27+ Hour Course](https://www.youtube.com/watch?v=ol9_NnC9-cc) - SQL, Python, Cloud, Bash, AI, Git & GitHub
+
 ### Python
 
 - [Real Python — pandas](https://realpython.com/learning-paths/pandas-data-science/)
-- [Pandas docs — User Guide](https://pandas.pydata.org/docs/user_guide/)
-- [Wes McKinney — Python for Data Analysis (free)](https://wesmckinney.com/book/)
+- [Guide to NumPy, pandas, and Data Visualization](https://www.dataquest.io/guide/numpy-pandas-and-data-visualization-tutorial/)
 
 ### SQL
 
@@ -47,7 +48,6 @@
 ### Communication
 
 - [Storytelling with Data — Cole Knaflic blog](https://www.storytellingwithdata.com/blog)
-- [HBR Data Science articles](https://hbr.org/topic/data-science)
 
 ### Blockchain / Web3
 
@@ -83,46 +83,6 @@
 - [ ] Considered options: GitHub, Kaggle, Tableau Public, personal site
 ```
 
-## Case Study Structure
 
-What to include in a case study:
+## Interview
 
-1. **Introduction** — purpose, scenario, real-world relevance (optional: assumptions/theories)
-2. **Problems** — major problems identified, how you analyzed, supporting facts
-3. **Solutions** — outline solution + alternatives, pros/cons each
-4. **Conclusion** — key takeaways, what you learned
-5. **Next steps** — chosen solution and recommendation; explain why; specify what/who/when
-
-Optional: **AI Implementation** if relevant.
-
-
-## Interview Questions
-
-Common analyst interview questions:
-
-- What is your process for cleaning data?
-- What tools do you use for creating data visualizations?
-- How and why do data visualizations enhance the stories data tells?
-- What considerations are top of mind when sharing data stories with non-technical stakeholders?
-- Walk me through a project you're proud of
-- How do you decide which metric to track?
-- Describe a time you found an unexpected insight
-- How do you handle conflicting requests from stakeholders?
-- What's the difference between correlation and causation?
-- Explain p-value to a non-technical PM
-
-## Build a portfolio in 4 projects
-
-A solid analyst portfolio needs **breadth** more than depth:
-
-1. **One messy real-world dataset** — show cleaning skill (e.g., NYC 311 complaints)
-2. **One business analysis** — frame a question, answer with data, give recommendation (e.g., Bellabeat case study)
-3. **One dashboard** — Tableau Public or Looker Studio (anyone can click around)
-4. **One end-to-end project** — SQL data pull → Python analysis → visualization → write-up
-
-Host on:
-
-- [GitHub](https://github.com) — code and notebooks
-- Personal site (this kind of static site works) — narrative
-- [Tableau Public](https://public.tableau.com/) — dashboards
-- [Kaggle](https://www.kaggle.com/) — notebooks with built-in audience

@@ -19,3 +19,5 @@
 ## References
 
 - [IBM Data Management Guide](https://www.ibm.com/think/topics/data-management#7281535)
+- [What is Data Mapping?](https://www.fivetran.com/learn/data-mapping)
+- [Surfalytics Projects](https://github.com/surfalytics/data-projects)

@@ -34,6 +34,17 @@ Binding to `127.0.0.1` keeps the `sa` login reachable only from localhost — wi
   ```
   This command will start and run `sqlcmd`.
 
+## Execution Query Command
+
+### Measure query execution time and I/O statistics
+
+**Risk: Safe** <br>
+Database: SQL Server
+
+```sql
+SET STATISTICS IO, TIME ON;
+```
+
 ## References
 
 - [Microsoft Learn: SQL Server Technical Documentation](https://learn.microsoft.com/en-us/sql/sql-server/?view=sql-server-ver17)
