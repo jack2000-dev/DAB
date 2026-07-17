@@ -48,6 +48,6 @@ This repo is self-maintaining via `CLAUDE.md` and the `wiki-maintainer` skill at
 
 Adding a page means updating three things: the file, the `## Pages` list in the owning section's `index.md` (the role tab's index for DBA/DE/AE, or the relevant subsection's index for Data Analyst, e.g. `python/index.md`), and `nav` in `zensical.toml`.
 
-## License
+## Reference
 
-MIT — see [LICENSE](LICENSE).
+[Zensical Documentation](https://zensical.org/docs/get-started/)
