@@ -1,0 +1,14 @@
+docs/de/materials.md
+  h_0b5caf7ef38889 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "898a628cdd67d7798c17088e674d8988601924a2",
+  "prompts": {},
+  "humans": {
+    "h_0b5caf7ef38889": {
+      "author": "jack2000-dev <jackwforwork@gmail.com>"
+    }
+  }
+}
