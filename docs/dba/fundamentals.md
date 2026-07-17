@@ -114,6 +114,141 @@ How to think like the engine but for big data.
 - You should index the joint. Which are the columns that frequently `JOIN` like `Id` and PrimaryKey column
 - It's important to do "Pagination" 
 
+## Backup & Restore
+
+Database Engine: SQL Server
+
+### 3 Common Backup Strategies
+
+1. **VM snapshot backups, taken frequently**: Easy to implement, but a silo 
+2. **daily full natgive SQL backups**: Easy to implement, but a lot of data loss
+3. **daily full native SQL backups + transaction log backups**: A little harder to implement, but super flexible 
+
+Commonly used products:
+- Veeam
+- SnapManager
+- NetBackup
+- Backup Exec
+- AppAssure
+
+#### VM snapshot backup
+
+3rd party products backup servers, files, and databases by taking periodic snapshots with VSS (Volume Snapshot Service)
+
+- VSS snapshot is best for 
+  - Standalone servers with <35 databases
+  - Third party apps (accounting, HR, infrastructure)
+- Configure the snapshot software so that it's application-aware and inactivate SQL Server's writes
+- The more we want 0 data loss, the more frequent we need to backup
+- Snapshot backup need to balance 1) How long the backups take (and how much they interfere with load) and 2) How frequently you take them
+- Ideally, take snapshot as frequently as practical: like every 15 minutes would be greartg for most shops
+
+- **Advangtages:**
+  - Easy to configure (even with app awareness)
+  - Let you manage your SQL Server backups the same way you manage any other server's backups
+  - Good enough to meet most common business goal. Most of them are okay losing ~15 minutes of data, and being down while you restore the snapshot
+
+- **Disadvantages:**
+  - When configure poorly, performance is terrible: causes frequent freezes, affecting end users
+  - Not useful for common data-related tasks like 1) Copying data to development servers 2) Giving data to outside partner, companies 3) Keeping a reporting server in sync
+
+#### Daily Full Native SQL Backups
+
+- This exist before VSS
+- Using `BACKUP DATABASE` SQL Server command, which has lots of options but it basically:
+  - Reads as quickly as it can from the data & log files
+  - Shoves the data out to a new file (could be local, network share, or cloud)
+  - When it's done, also copies enough transactional data so that it can recover the database to a single point in time (because the backup may take time)
+
+- **Advantages:**
+  - Easy to configure (maintenace plans)
+  - Easy to perform the restores (if you only have a few databases)
+  - Works the same way wheter it's a VM or physical box
+  - Has worked the same way for decades
+  - Lets you use encryption to protect the data at rest
+  - Easy to give backups to other parties, refresh dev
+
+- **Disadvantages:**
+  - It backup the entire database
+  - Adds a layer of complexity: need to monitor to know that the backups are working, you may also need to backup the backup files, moving them to other storage or another site
+  - Painful to do restores when you have dozens of databases: you'll need to learn to automate it
+
+- **Who it's great for**
+  - Reporting, data warehouse servers where we don't mind losing a day of data
+  - Servers where we don't have licensing for VSS snapshot tools, and the data isn't critical
+
+#### Full Backups + Transaction Log Backups
+
+- Recommended for mission-critical servers
+- If you unplug the SQL Server, it will recover well because it read the LOGS
+- **How log backups save you**
+  - Midnight: take a full backup
+  - 1AM: take a transaction log backup, which contains all of the transactions since the last log backup
+  - 2AM: take another log backup... and all day, hourly: take log backups
+  - 4:30PM: BOOM!, the server crashes
+  - Resotre: the full backup, and all the log backup since
+
+- **Advantages**
+  - Minimized data loss (even down to restoring right before a single bad transaction)
+  - Works the same way whether it's a VM or physical
+  - Has worked the same way for decades
+  - Encryption ready
+  - Easy to give backup to other parties, refresh dev
+
+- **Disadvanteges**
+  - Painful to restore lots of log backups across lots of databases: better use automation
+  - Restoring to a point-in-time isn't as easy as it sounds
+  - If you want disaster recovery, you can't just sync the VM across data centers: now you have to build another SQL Server, restore the data backup
+  - If the log isn't backed up regulary, it can grow, causing disk space issues
+
+### Recovery Models
+
+Set at hte database level: right-click on the DB
+
+- **Full recovery:**
+  - All transactions are logged
+  - The transaction log is only cleared by transaction log backups
+- **Simple recovery:**
+  - All transactions are still logged
+  - The log is cleared as transactions finish *
+
+### Which recovery model to choose
+
+- Daily full backups only? → Simple recovery model
+- Daily fulls + transaction log backups? → Full recovery model
+- Snapshot backups with VSS? → Check with your software vendor's documentation
+
+### Backup Security
+
+- Databases often contain sensitive, unencrypted PII (Personally Identifiable Information). Backups should be secured, and administrators should consider encrypting both the data at rest and the backups themselves to prevent unauthorized access.
+
+### Restore
+
+How to do a one-time restore (**Note: read the docs due to feature changes**)
+
+- **VSS snapshots are simple:**
+  - Give the users the list of VSS snapshot times
+  - Let them pick which time to restore
+- **SQL Server native backups (more complex):**
+  - Decide the point in time to aim for
+  - Restore the full backup before that time
+  - Restore the last differential backup before time
+  - Restore all the logs up to that point
+
+- **The Golden Rule:** Never restore a backup over an existing production database. Always restore to a **new database name** to prevent accidental data loss, and allow users to extract the specific objects they need
+  - Restore to a differrent server
+  - Keep the restored copy in read-only mode
+  - Then, copy over when you need
+
+- **Restoring Multiple Databases:** Be aware that SQL Server backups run serially, not simultaneously. If your application spans multiple databases, you may encounter **data inconsistencies** where transactions exist in one database but not another
+- 
+- **System Databases:** Restoring *master*, *model*, or *msdb* is rare and complex. If a system database is compromised, the instructor suggests that a full server rebuild is often safer and more reliable than a restore
+
+- **Disaster Recovery & Automation:** When a server is completely destroyed, rebuilding from scratch is often preferred over simple restoration. The instructor advocates for using tools like **PowerShell** and **dbatools** to automate the recreation of logins, agent jobs, and permissions, which are essential for production DBAs to master
+
+### Important Considerations:
+* **High Availability Gotchas:** Features like *Always On Availability Groups* or *replication* are broken by restores and require manual reconfiguration (8:46 - 11:45).
+* **Preparation:** Testing and practice are vital. Using tools like *sp_Blitz* helps maintain an awareness of your server configuration, making it easier to recreate the environment during an emergency (29:36 - 30:03).
 
 ## Database Indexes
 
