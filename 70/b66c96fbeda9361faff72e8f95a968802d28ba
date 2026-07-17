@@ -1,0 +1,14 @@
+README.md
+  h_0b5caf7ef38889 51,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "70b66c96fbeda9361faff72e8f95a968802d28ba",
+  "prompts": {},
+  "humans": {
+    "h_0b5caf7ef38889": {
+      "author": "jack2000-dev <jackwforwork@gmail.com>"
+    }
+  }
+}
