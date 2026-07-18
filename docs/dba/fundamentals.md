@@ -256,6 +256,29 @@ How to do a one-time restore (**Note: read the docs due to feature changes**)
 * **High Availability Gotchas:** Features like *Always On Availability Groups* or *replication* are broken by restores and require manual reconfiguration (8:46 - 11:45).
 * **Preparation:** Testing and practice are vital. Using tools like *sp_Blitz* helps maintain an awareness of your server configuration, making it easier to recreate the environment during an emergency (29:36 - 30:03).
 
+## SysAdmin & Developer
+
+This is a **SQL Server "Maintenance Plans"** for System Admin and Developer
+to protect their servers without requiring extensive T-SQL knowledge. This approach is intended for those looking for an easy, safe setup, while professional DBAs should refer to the [*Ola Hallengren*](https://github.com/olahallengren/sql-server-maintenance-solution) scripts instead.
+
+### Core Maintenance Strategy
+Creating two separate maintenance plans to ensure robust protection:
+
+* **Overnight Maintenance Plan:** This plan handles heavy, once-a-day tasks. 
+    * **Tasks include:** Database integrity checks, full backups, history cleanup, and maintenance cleanup (deleting old backups). 
+    * **Index Management:** Depending on the edition, users should either **reorganize** and **update statistics** (Standard Edition) or **rebuild indexes** (Enterprise Edition)
+* **Transaction Log Backup Plan:** Designed to run every five minutes to minimize data loss.
+    * **Key focus:** Captures database changes frequently to ensure recovery point objectives are met
+
+### Best Practices Highlighted
+* **Automation & Defaults:** The wizard is used for convenience, but the host warns against accepting default settings
+* **Backup Destinations:** Using **UNC paths** to move backups off the server immediately
+* **Safety Measures:** Always enable **backup compression** and **checksums** to ensure data integrity and storage efficiency
+* **Retention:** Maintain at least one week's worth of backup history to handle potential weekend incidents or prolonged absences
+
+### Monitoring
+Users are encouraged to verify the performance of these jobs by checking the **duration history** after they have run. If a job takes an excessively long time, it may be necessary to have discussions with management regarding hardware limitations or task scheduling.
+
 ## Database Indexes
 
 Indexes are database objects that enhance the speed of data retrieval operations. They function by creating a quick lookup mechanism for data based on one or more columns in a table, much like an index in a book helps you find information quickly. Namely, indexes reduce the amount of disk I/O needed to access data, thereby boosting overall database performance.
@@ -341,12 +364,6 @@ Database replication is copying and maintaining database objects across multiple
     - OnLine Transaction Processing (OLTP)
     - OnLine Analytics Processing (OLAP)
     - Lake Transactional/Analytical Processing (LTAP) it basically OLTP + OLAP
-
-## Joins: INNER, LEFT, RIGHT
-
-- `INNER JOIN`: returns only the rows with a match between the two tables based on the join condition.
-- `LEFT JOIN`: returns all the rows from the left table and the matched rows from the right table; if there is no match, `NULL` values are returned for the columns from the right table.
-- `RIGHT JOIN`: is similar to a `LEFT JOIN`, but it returns all the rows from the right table and the matched rows from the left table, filling in `NULL` where there is no match.
 
 ## Clustered vs. Non-Clustered Index
 
